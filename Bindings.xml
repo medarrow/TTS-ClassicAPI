@@ -1,0 +1,20 @@
+<Bindings>
+	<Binding name="TTSCAPI_TOGGLE" header="TTSCAPI">
+		TTSClassicAPI_Toggle()
+	</Binding>
+	<Binding name="TTSCAPI_STOP">
+		TTSClassicAPI_Stop()
+	</Binding>
+	<Binding name="TTSCAPI_SKIP">
+		TTSClassicAPI_Skip()
+	</Binding>
+	<Binding name="TTSCAPI_REPEAT">
+		TTSClassicAPI_Repeat()
+	</Binding>
+	<Binding name="TTSCAPI_READTARGET">
+		TTSClassicAPI_ReadTarget()
+	</Binding>
+	<Binding name="TTSCAPI_OPTIONS">
+		TTSClassicAPI_ToggleOptions()
+	</Binding>
+</Bindings>

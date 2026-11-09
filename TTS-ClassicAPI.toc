@@ -1,0 +1,13 @@
+## Interface: 11200
+## Title: TTS-ClassicAPI
+## Notes: Screen reader for WoW 1.12 / TurtleWoW. Reads chat, NPCs, quests, gossip, books, targets and more aloud through ClassicAPI's C_VoiceChat text-to-speech, with per-source voice, rate and volume.
+## Author: medarrow
+## Version: 1.0.0
+## SavedVariables: TTSClassicAPIDB
+## DefaultState: enabled
+
+Core.lua
+Sources.lua
+QuestLog.lua
+Presets.lua
+Options.lua

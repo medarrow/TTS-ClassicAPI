@@ -1,0 +1,50 @@
+# Push a tag like v1.0.0 to build TTS-ClassicAPI-1.0.0.zip (with the correct
+# "TTS-ClassicAPI" folder inside) and publish it as a GitHub release.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check TOC version matches tag
+        id: version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          toc=$(grep -m1 '^## Version:' TTS-ClassicAPI.toc | sed 's/^## Version:[[:space:]]*//' | tr -d '\r')
+          if [ "$tag" != "$toc" ]; then
+            echo "::error::Tag v$tag does not match TOC version $toc"
+            exit 1
+          fi
+          echo "version=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Build zip
+        run: |
+          mkdir -p dist/TTS-ClassicAPI
+          cp *.toc *.lua *.xml README.md LICENSE CHANGELOG.md dist/TTS-ClassicAPI/
+          cd dist
+          zip -r "TTS-ClassicAPI-${{ steps.version.outputs.version }}.zip" TTS-ClassicAPI
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          awk -v v="${{ steps.version.outputs.version }}" '
+            $0 ~ "^## " v "$" { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Release ${{ steps.version.outputs.version }}" > notes.md
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: TTS-ClassicAPI ${{ steps.version.outputs.version }}
+          body_path: notes.md
+          files: dist/TTS-ClassicAPI-${{ steps.version.outputs.version }}.zip
