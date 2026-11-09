@@ -1,7 +1,12 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
+- New quest, gossip or book text now replaces older quest/gossip/book speech instead of queueing
+  behind it, e.g. clicking from an NPC's gossip into a quest, or turning a book page. Chat and other
+  queued lines are not affected.
+- The *Skip unknown languages* filter now rebuilds its list of your character's languages after every
+  loading screen, so it no longer stays wrong until a `/reload`.
 - The Target source is now off by default, so no Targeting sources are on in a new install or in the
   **Default** preset. Existing settings are unchanged; load the Default preset to apply it.
   `/tts target` and the *Read target* key binding still work while the source is off.

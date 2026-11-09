@@ -10,7 +10,7 @@ ns = ns or {}
 TTSClassicAPI = ns
 
 ns.name = addonName
-ns.version = "1.0.0"
+ns.version = "1.1.0"
 
 local LOCAL_PLAYBACK = 1
 
@@ -378,6 +378,22 @@ function ns.Enqueue(text, src, opts)
 	if (s and s.interrupt) or (opts and opts.interrupt) then
 		ns.Stop()
 		tinsert(queue, item)
+	elseif item.dialog then
+		-- New quest/gossip/book text supersedes older dialog text (e.g. clicking
+		-- from an NPC's gossip into a quest, or turning a book page): drop the
+		-- queued dialog lines and cut off the one playing, leaving chat alone.
+		for i = #queue, 1, -1 do
+			if queue[i].dialog then tremove(queue, i) end
+		end
+		if current and current.dialog then
+			markStale()
+			clearCurrent()
+			C_VoiceChat.StopSpeakingText()
+			tinsert(queue, 1, item)   -- take the interrupted line's place
+		else
+			tinsert(queue, item)
+			while #queue > g.maxQueue do tremove(queue, 1) end
+		end
 	else
 		tinsert(queue, item)
 		while #queue > g.maxQueue do tremove(queue, 1) end
@@ -567,6 +583,12 @@ registerInternal("PLAYER_LOGIN", function()
 		ns.Print("No SAPI voices found. Install voices in Windows Settings > Time & Language > Speech, then type /tts voices.")
 	end
 	ns.Print("loaded. Type |cffffff00/tts|r for options.")
+end)
+
+-- Rebuild the known-languages list after every loading screen, in case it was
+-- read before the client had it or the character learned a language since.
+registerInternal("PLAYER_ENTERING_WORLD", function()
+	knownLanguages = nil
 end)
 
 registerInternal("VOICE_CHAT_TTS_PLAYBACK_STARTED", function(numConsumers, utteranceID)
