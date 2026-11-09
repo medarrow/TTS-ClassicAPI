@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- The Target source is now off by default, so no Targeting sources are on in a new install or in the
+  **Default** preset. Existing settings are unchanged; load the Default preset to apply it.
+  `/tts target` and the *Read target* key binding still work while the source is off.
+
 ## 1.0.0
 
 First public release.

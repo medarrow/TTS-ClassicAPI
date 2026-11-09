@@ -369,7 +369,7 @@ Register({
 local TARGET_SETTLE = 0.15
 local targetSeq, lastTargetID = 0, nil
 Register({
-	key = "TARGET", label = "Target", category = "Targeting", default = true,
+	key = "TARGET", label = "Target", category = "Targeting", default = false,
 	events = { "PLAYER_TARGET_CHANGED" },
 	-- Some nameplate/unit-scan addons briefly target units and then restore your
 	-- target, firing PLAYER_TARGET_CHANGED in bursts. Wait for the target to
